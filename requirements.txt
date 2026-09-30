@@ -1,0 +1,7 @@
+pandas 
+pyarrow 
+requests 
+beautifulsoup4
+numpy
+scikit-learn
+tqdm

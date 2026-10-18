@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "NYC_Taxi_Demand_Revenue_Analytics"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "20bbc584-84c0-402c-b488-b0bbc6477cd3"
+  }
+}

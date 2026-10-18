@@ -1,0 +1,272 @@
+table Fact_Location_Daily
+	lineageTag: af5f2634-9d2b-4f06-83f8-387e66a65296
+
+	measure 'Pickup Trips' = SUM(Fact_Location_Daily[total_trips])
+		formatString: #,0
+		lineageTag: 06f3f438-bd6d-4632-804f-07f08f670bf0
+
+	measure 'Pickup Revenue' = SUM(Fact_Location_Daily[total_revenue])
+		formatString: $#,0.00
+		lineageTag: 208c6389-8e4e-41b6-a486-4c78ed00b31c
+
+	measure 'Manhattan Pickup Trip Share' = DIVIDE(CALCULATE([Pickup Trips], REMOVEFILTERS(Dim_Pickup_Location), Dim_Pickup_Location[Borough] = "Manhattan"), CALCULATE([Pickup Trips], REMOVEFILTERS(Dim_Pickup_Location)))
+		formatString: 0.0%
+		lineageTag: aa21baac-e0df-4a21-8c37-46f7485bd42c
+
+	measure 'Active Pickup Locations' = DISTINCTCOUNT(Fact_Location_Daily[pickup_location_id])
+		formatString: #,0
+		lineageTag: c570877a-c81a-4d7c-b7bf-93e9483ce2c4
+
+	/// Pickup Trips as a share of pickup trips across all pickup zones in the current date/taxi context.
+	measure 'Pickup Trip Share' = DIVIDE([Pickup Trips], CALCULATE([Pickup Trips], REMOVEFILTERS(Dim_Pickup_Location)))
+		formatString: 0.0%
+		lineageTag: e630b64c-47de-40df-9b46-e15c6f9dce11
+
+	column pickup_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 011428c5-0eb8-4fe8-aa5c-df3a24e08042
+		summarizeBy: none
+		sourceColumn: pickup_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column pickup_location_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e2ef2cb-a590-4ce9-8fc9-2d125633dcaa
+		summarizeBy: none
+		sourceColumn: pickup_location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column taxi_type
+		dataType: string
+		lineageTag: fdeb0c7c-cd36-405e-b757-b1970e99ca50
+		summarizeBy: none
+		sourceColumn: taxi_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: a13941e5-cb6a-497d-9e3d-41df7c56ad78
+		summarizeBy: sum
+		sourceColumn: total_trips
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e4d053d-d694-4780-b75f-d49523ff28d0
+		summarizeBy: sum
+		sourceColumn: revenue_trips
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_revenue
+		dataType: double
+		formatString: 0.00
+		lineageTag: 7c2bb5c5-bb57-4d1c-bdc1-8fbb84a7eccd
+		summarizeBy: sum
+		sourceColumn: total_revenue
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_fare
+		dataType: double
+		formatString: 0
+		lineageTag: 5ca27557-ba2d-46cb-8a00-a06a6993d5eb
+		summarizeBy: sum
+		sourceColumn: total_fare
+
+		annotation SummarizationSetBy = Automatic
+
+	column fare_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 36daee40-f749-45f8-acb5-38a16843485b
+		summarizeBy: sum
+		sourceColumn: fare_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_tips
+		dataType: double
+		formatString: 0
+		lineageTag: 77349c09-76fb-42e4-9830-4dfe46b323f6
+		summarizeBy: sum
+		sourceColumn: total_tips
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_distance
+		dataType: double
+		formatString: 0.00
+		lineageTag: 4fe0c522-2c23-4527-aec3-f935d012c58d
+		summarizeBy: sum
+		sourceColumn: total_distance
+
+		annotation SummarizationSetBy = Automatic
+
+	column distance_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c3d2a63-e456-44f9-8bb9-17ddd0f5d109
+		summarizeBy: sum
+		sourceColumn: distance_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_duration_minutes
+		dataType: double
+		formatString: 0.00
+		lineageTag: 18a012e8-5d4c-4cf8-83f8-30b2da49abef
+		summarizeBy: sum
+		sourceColumn: total_duration_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column duration_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 6451ae10-40aa-4b09-a04b-e9932cbe3d6f
+		summarizeBy: sum
+		sourceColumn: duration_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_passenger_count
+		dataType: double
+		formatString: 0
+		lineageTag: 4b207291-3938-45fb-a09f-1739243a94cc
+		summarizeBy: sum
+		sourceColumn: total_passenger_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column passenger_count_records
+		dataType: int64
+		formatString: 0
+		lineageTag: 4a998ce1-2593-46e8-a3fe-9b93043ad76a
+		summarizeBy: sum
+		sourceColumn: passenger_count_records
+
+		annotation SummarizationSetBy = Automatic
+
+	column tip_count
+		dataType: int64
+		formatString: 0
+		lineageTag: dccb931d-40aa-49b1-b75f-8b9ca045cca6
+		summarizeBy: sum
+		sourceColumn: tip_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column negative_fare_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: 2317538b-2b4e-44fa-9a2f-4b316196b6b6
+		summarizeBy: sum
+		sourceColumn: negative_fare_trips
+
+		annotation SummarizationSetBy = Automatic
+
+	column negative_total_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: 1bdaf97c-86d7-495c-98b4-4c40b46a1d5c
+		summarizeBy: sum
+		sourceColumn: negative_total_trips
+
+		annotation SummarizationSetBy = Automatic
+
+	column zero_distance_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: b5f2a435-74d6-4086-aef8-4e0615ea06ed
+		summarizeBy: sum
+		sourceColumn: zero_distance_trips
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_fare
+		dataType: double
+		lineageTag: 5706c678-60ce-4985-a235-c4cf833c3cbf
+		summarizeBy: sum
+		sourceColumn: average_fare
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column average_distance
+		dataType: double
+		formatString: 0.00
+		lineageTag: ce300d27-a01a-4b0b-ba67-d7b82eb085d8
+		summarizeBy: sum
+		sourceColumn: average_distance
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_duration_minutes
+		dataType: double
+		formatString: 0.00
+		lineageTag: 766b8e10-7897-4e7e-8194-5bcde4e0b0f0
+		summarizeBy: sum
+		sourceColumn: average_duration_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_passenger_count
+		dataType: double
+		formatString: 0
+		lineageTag: d429a1ed-4a72-4684-be7e-e4be12f364fd
+		summarizeBy: sum
+		sourceColumn: average_passenger_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_tip
+		dataType: double
+		formatString: 0
+		lineageTag: b7c3671e-f535-433c-a2b1-b3963ab132b2
+		summarizeBy: sum
+		sourceColumn: average_tip
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue_per_trip
+		dataType: double
+		formatString: 0.00
+		lineageTag: d19678dc-e3e2-48f3-a6ca-a7e41b9b7047
+		summarizeBy: sum
+		sourceColumn: revenue_per_trip
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue_per_mile
+		dataType: double
+		formatString: 0.00
+		lineageTag: 0d356473-b988-4467-8dd3-24e86fc724ae
+		summarizeBy: sum
+		sourceColumn: revenue_per_mile
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Location_Daily = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files("D:\Personal\MineProjects\PowerBIProjects\Project1\NYC-Taxi-Demand-Revenue-Analytics\data\powerbi"),
+				    #"D:\Personal\MineProjects\PowerBIProjects\Project1\NYC-Taxi-Demand-Revenue-Analytics\data\powerbi\_fact_location_daily parquet" = Source{[#"Folder Path"="D:\Personal\MineProjects\PowerBIProjects\Project1\NYC-Taxi-Demand-Revenue-Analytics\data\powerbi\",Name="fact_location_daily.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"D:\Personal\MineProjects\PowerBIProjects\Project1\NYC-Taxi-Demand-Revenue-Analytics\data\powerbi\_fact_location_daily parquet")
+				in
+				    #"Imported Parquet"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

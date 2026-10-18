@@ -1,0 +1,52 @@
+relationship ba55ec9b-3a06-1b9b-ae29-37b5ee9d293a
+	fromColumn: Fact_Daily.pickup_date
+	toColumn: Dim_Date.Date
+
+relationship c35fbf0d-fc81-f3fa-635f-95233adb8d93
+	fromColumn: Fact_Hourly.pickup_date
+	toColumn: Dim_Date.Date
+
+relationship 16a84e23-2a05-d7c8-0c6a-af42bc2e9ff3
+	fromColumn: Fact_Location_Daily.pickup_date
+	toColumn: Dim_Date.Date
+
+relationship c8d9170b-cd07-8e2c-85d6-dfb9434117fc
+	fromColumn: Fact_Payment_Daily.pickup_date
+	toColumn: Dim_Date.Date
+
+relationship d7129181-9f1b-3ad2-383d-a7cab9794427
+	fromColumn: Fact_Daily.taxi_type
+	toColumn: Dim_Taxi.taxi_type
+
+relationship 63ba7bab-a042-5a5c-11ce-0ed96ecf3a1f
+	fromColumn: Fact_Hourly.taxi_type
+	toColumn: Dim_Taxi.taxi_type
+
+relationship debb4c60-b3f9-bc63-caf7-97294a1178c5
+	fromColumn: Fact_Payment_Daily.taxi_type
+	toColumn: Dim_Taxi.taxi_type
+
+relationship 99156e17-53e5-296f-63ea-3a12745e40a9
+	fromColumn: Fact_Location_Daily.taxi_type
+	toColumn: Dim_Taxi.taxi_type
+
+relationship addef833-d5e7-806f-0743-1b232cf1ae13
+	fromColumn: Fact_Route.taxi_type
+	toColumn: Dim_Taxi.taxi_type
+
+relationship 5fb00a86-430a-b42b-c019-b1c9d41ddd0a
+	fromColumn: Fact_Payment_Daily.payment_type_key
+	toColumn: Dim_Payment.payment_type
+
+relationship 0240319d-ea4f-aa16-cb33-da9e027a3e57
+	fromColumn: Fact_Route.pickup_location_id
+	toColumn: Dim_Pickup_Location.location_id
+
+relationship a9ece0cd-06ef-0ed4-89d8-a879e229b45e
+	fromColumn: Fact_Location_Daily.pickup_location_id
+	toColumn: Dim_Pickup_Location.location_id
+
+relationship 94e2621f-dd96-ff3d-9c51-8f3a7339b6e9
+	fromColumn: Fact_Route.dropoff_location_id
+	toColumn: Dim_Dropoff_Location.location_id
+

@@ -1,0 +1,443 @@
+table Fact_Daily
+	lineageTag: c83f8f07-0de6-4fcb-9fde-bcdd0607cbba
+
+	measure 'Total Trips' =
+			
+			SUM(Fact_Daily[total_trips])
+		formatString: 0
+		lineageTag: ce879b69-ab37-493d-985d-fd6b99e27f45
+
+	measure 'Total Revenue' =
+			
+			SUM(Fact_Daily[total_revenue])
+		lineageTag: de14be89-816c-4be7-8d24-f02a235eaff0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Fare' =
+			
+			SUM(Fact_Daily[total_fare])
+		lineageTag: a87c6d55-485f-4db3-82be-e9c46f070a79
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Tips' =
+			
+			SUM(Fact_Daily[total_tips])
+		lineageTag: faacbfe1-9498-4914-a96d-62f05dac6a74
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Trip Duration (Minutes)' = DIVIDE(SUM(Fact_Daily[total_duration_minutes]), SUM(Fact_Daily[duration_count]))
+		formatString: 0.00
+		lineageTag: e0a74a2b-5f42-4e7c-bfde-a0f4681c0b52
+
+	measure 'Net Recorded Distance' = SUM(Fact_Daily[total_distance])
+		formatString: #,0.00
+		lineageTag: 5dadff93-b01a-4211-af02-4d8141b72492
+
+	measure 'Reported Passenger Count Total' = SUM(Fact_Daily[total_passenger_count])
+		formatString: #,0.00
+		lineageTag: 83af8e27-7a01-431b-8d64-52bddfc241ff
+
+	measure 'Average Daily Trips' = AVERAGEX(VALUES(Dim_Date[Date]), [Total Trips])
+		formatString: #,0.0
+		lineageTag: ceab8e80-0b66-453f-bc5e-78cab64c7e7e
+
+	measure 'Yellow Taxi Trip Share' = DIVIDE(CALCULATE([Total Trips], REMOVEFILTERS(Dim_Taxi[taxi_type]), Dim_Taxi[taxi_type] = "Yellow"), CALCULATE([Total Trips], REMOVEFILTERS(Dim_Taxi[taxi_type])))
+		formatString: 0.0%
+		lineageTag: 4f1190a1-de23-4346-a7a6-c4fa0f25aabd
+
+	measure 'Weekend Trip Share' = DIVIDE(CALCULATE([Total Trips], Dim_Date[Is Weekend] = TRUE()), CALCULATE([Total Trips], REMOVEFILTERS(Dim_Date[Is Weekend])))
+		formatString: 0.0%
+		lineageTag: 4231d1f6-f3af-48a4-b158-f5b342a89913
+
+	measure 'Yellow Taxi Revenue Share' = DIVIDE(CALCULATE([Total Revenue], REMOVEFILTERS(Dim_Taxi[taxi_type]), Dim_Taxi[taxi_type] = "Yellow"), CALCULATE([Total Revenue], REMOVEFILTERS(Dim_Taxi[taxi_type])))
+		formatString: 0.0%
+		lineageTag: 3566c2f1-b375-4098-9af2-6eceb5ea09b8
+
+	measure 'Revenue per Revenue-Eligible Trip' = DIVIDE(SUM(Fact_Daily[total_revenue]), SUM(Fact_Daily[revenue_trips]))
+		formatString: $#,0.00
+		lineageTag: 4d7f42fc-d52e-4e32-840b-ac84da746682
+
+	/// Trips in the 12 months ending at the latest selected date vs the preceding 12 months. Respects taxi-type filters; overrides the date filter for the window itself. Blank if either window has no data.
+	measure 'Trips Change vs Prior 12M %' =
+			VAR _end = MAX(Dim_Date[Date])
+			VAR _cur = CALCULATE([Total Trips], REMOVEFILTERS(Dim_Date), DATESBETWEEN(Dim_Date[Date], EDATE(_end, -12) + 1, _end))
+			VAR _prev = CALCULATE([Total Trips], REMOVEFILTERS(Dim_Date), DATESBETWEEN(Dim_Date[Date], EDATE(_end, -24) + 1, EDATE(_end, -12)))
+			RETURN IF(_cur > 0 && _prev > 0, DIVIDE(_cur - _prev, _prev))
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: KPI Deltas
+		lineageTag: 9178130c-2f78-4126-a104-d5c80cf47a53
+
+	/// Revenue in the 12 months ending at the latest selected date vs the preceding 12 months.
+	measure 'Revenue Change vs Prior 12M %' =
+			VAR _end = MAX(Dim_Date[Date])
+			VAR _cur = CALCULATE([Total Revenue], REMOVEFILTERS(Dim_Date), DATESBETWEEN(Dim_Date[Date], EDATE(_end, -12) + 1, _end))
+			VAR _prev = CALCULATE([Total Revenue], REMOVEFILTERS(Dim_Date), DATESBETWEEN(Dim_Date[Date], EDATE(_end, -24) + 1, EDATE(_end, -12)))
+			RETURN IF(_cur > 0 && _prev > 0, DIVIDE(_cur - _prev, _prev))
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: KPI Deltas
+		lineageTag: ab748000-16e5-44c6-89bc-061ceadd0c31
+
+	/// Fare in the 12 months ending at the latest selected date vs the preceding 12 months.
+	measure 'Fare Change vs Prior 12M %' =
+			VAR _end = MAX(Dim_Date[Date])
+			VAR _cur = CALCULATE([Total Fare], REMOVEFILTERS(Dim_Date), DATESBETWEEN(Dim_Date[Date], EDATE(_end, -12) + 1, _end))
+			VAR _prev = CALCULATE([Total Fare], REMOVEFILTERS(Dim_Date), DATESBETWEEN(Dim_Date[Date], EDATE(_end, -24) + 1, EDATE(_end, -12)))
+			RETURN IF(_cur > 0 && _prev > 0, DIVIDE(_cur - _prev, _prev))
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: KPI Deltas
+		lineageTag: b5e9dc11-9af0-418e-91c4-f7188a6fb1c4
+
+	/// Tips in the 12 months ending at the latest selected date vs the preceding 12 months.
+	measure 'Tips Change vs Prior 12M %' =
+			VAR _end = MAX(Dim_Date[Date])
+			VAR _cur = CALCULATE([Total Tips], REMOVEFILTERS(Dim_Date), DATESBETWEEN(Dim_Date[Date], EDATE(_end, -12) + 1, _end))
+			VAR _prev = CALCULATE([Total Tips], REMOVEFILTERS(Dim_Date), DATESBETWEEN(Dim_Date[Date], EDATE(_end, -24) + 1, EDATE(_end, -12)))
+			RETURN IF(_cur > 0 && _prev > 0, DIVIDE(_cur - _prev, _prev))
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: KPI Deltas
+		lineageTag: d7e92ab8-ce5a-4197-8a2b-79515faa5eed
+
+	/// Text label of the two 12-month windows used by the KPI delta measures.
+	measure 'Comparison Window Label' =
+			VAR _end = MAX(Dim_Date[Date])
+			RETURN FORMAT(EDATE(_end, -12) + 1, "mmm yyyy") & " - " & FORMAT(_end, "mmm yyyy") & " vs " & FORMAT(EDATE(_end, -24) + 1, "mmm yyyy") & " - " & FORMAT(EDATE(_end, -12), "mmm yyyy")
+		displayFolder: KPI Deltas
+		lineageTag: 5972b739-40fa-46c5-85c0-f43235f31385
+
+	/// Dynamic text for the Key Insights row (demand).
+	measure 'Insight - Demand' =
+			VAR _d = [Trips Change vs Prior 12M %]
+			RETURN IF(ISBLANK(_d), "Not enough history to compare two 12-month windows for this selection.", "Trips " & IF(_d >= 0, "rose ", "fell ") & FORMAT(ABS(_d), "0.0%") & " in the last 12 months compared with the prior 12 months.")
+		displayFolder: Insights
+		lineageTag: 568dd972-53da-4ef7-95b8-8e4bcac17fab
+
+	/// Dynamic text for the Key Insights row (revenue). Mentions trips only when their direction differs from revenue.
+	measure 'Insight - Revenue' =
+			VAR _r = [Revenue Change vs Prior 12M %]
+			VAR _t = [Trips Change vs Prior 12M %]
+			RETURN IF(ISBLANK(_r), "Not enough history to compare two 12-month windows for this selection.", "Revenue " & IF(_r >= 0, "rose ", "fell ") & FORMAT(ABS(_r), "0.0%") & " over the same comparison" & IF(NOT ISBLANK(_t) && (_r >= 0) <> (_t >= 0), ", while trips " & IF(_t >= 0, "rose ", "fell ") & FORMAT(ABS(_t), "0.0%") & ".", "."))
+		displayFolder: Insights
+		lineageTag: 7b42c922-55ad-43b0-84ee-c3eb22352a83
+
+	/// Dynamic text for the Key Insights row (taxi-type share).
+	measure 'Insight - Yellow Taxi' =
+			VAR _rs = [Yellow Taxi Revenue Share]
+			VAR _ts = [Yellow Taxi Trip Share]
+			RETURN IF(ISBLANK(_rs) || ISBLANK(_ts), "Taxi-type share is unavailable for this selection.", "Yellow Taxis account for " & FORMAT(_rs, "0.0%") & " of revenue and " & FORMAT(_ts, "0.0%") & " of trips in the selected period.")
+		displayFolder: Insights
+		lineageTag: 4098caf0-5338-4e37-93aa-dc563dd66ccd
+
+	/// Dynamic text for the Key Insights row (largest payment method by revenue).
+	measure 'Insight - Payments' =
+			VAR _top = TOPN(1, ALL(Dim_Payment[Payment Method]), [Payment Revenue], DESC)
+			VAR _name = MAXX(_top, Dim_Payment[Payment Method])
+			VAR _rev = MAXX(_top, [Payment Revenue])
+			VAR _tot = CALCULATE([Payment Revenue], REMOVEFILTERS(Dim_Payment))
+			RETURN IF(ISBLANK(_name) || _tot <= 0, "Payment mix is unavailable for this selection.", _name & " is the largest payment method by revenue, at " & FORMAT(DIVIDE(_rev, _tot), "0.0%") & " of payment revenue.")
+		displayFolder: Insights
+		lineageTag: 04a683e4-fedf-475d-aceb-ce599f23288d
+
+	/// Dynamic text for the Key Insights row (busiest pickup zone and Manhattan share).
+	measure 'Insight - Geography' =
+			VAR _top = TOPN(1, ALL(Dim_Pickup_Location[Zone]), [Pickup Trips], DESC)
+			VAR _zone = MAXX(_top, Dim_Pickup_Location[Zone])
+			VAR _tr = MAXX(_top, [Pickup Trips])
+			VAR _tot = CALCULATE([Pickup Trips], REMOVEFILTERS(Dim_Pickup_Location))
+			VAR _man = [Manhattan Pickup Trip Share]
+			RETURN IF(ISBLANK(_zone) || _tot <= 0, "Pickup geography is unavailable for this selection.", _zone & " is the busiest pickup zone (" & FORMAT(DIVIDE(_tr, _tot), "0.0%") & " of pickups)" & IF(ISBLANK(_man), ".", "; Manhattan accounts for " & FORMAT(_man, "0.0%") & " of pickups."))
+		displayFolder: Insights
+		lineageTag: bc38b1e6-b50e-4655-a6d6-df3c4fc8797c
+
+	column pickup_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 14d46d70-4557-4259-b9fd-cc96f2a177f0
+		summarizeBy: none
+		sourceColumn: pickup_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column taxi_type
+		dataType: string
+		lineageTag: 443cc2a3-22a5-4ad6-99b7-2aec0453563f
+		summarizeBy: none
+		sourceColumn: taxi_type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: fc34542e-a14b-4ba8-b6d6-aa6b64a60d44
+		summarizeBy: sum
+		sourceColumn: total_trips
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: 5690603a-b063-4c1b-9750-9b4a8de6c3c6
+		summarizeBy: sum
+		sourceColumn: revenue_trips
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_revenue
+		dataType: double
+		formatString: 0.00
+		lineageTag: ab4bad34-789b-4a3d-892c-c3e7d6328786
+		summarizeBy: sum
+		sourceColumn: total_revenue
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_fare
+		dataType: double
+		formatString: 0.00
+		lineageTag: d16352ff-4e1b-478c-92ae-139547586701
+		summarizeBy: sum
+		sourceColumn: total_fare
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column fare_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 8dcf7582-55d8-4870-af4e-52594b23347b
+		summarizeBy: sum
+		sourceColumn: fare_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_tips
+		dataType: double
+		formatString: 0
+		lineageTag: 511a8126-5ad1-4aee-b818-f238079e1ca2
+		summarizeBy: sum
+		sourceColumn: total_tips
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_distance
+		dataType: double
+		formatString: 0.00
+		lineageTag: 81ad43fc-1e5f-4e3f-b82e-c7324dc401a9
+		summarizeBy: sum
+		sourceColumn: total_distance
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column distance_count
+		dataType: int64
+		formatString: 0
+		lineageTag: c8cb544a-b17a-4c88-8311-b944adfc07a0
+		summarizeBy: sum
+		sourceColumn: distance_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_duration_minutes
+		dataType: double
+		formatString: 0.00
+		lineageTag: a72165fd-06ec-4e08-96c4-a82d80df8db2
+		summarizeBy: sum
+		sourceColumn: total_duration_minutes
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column duration_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 1ebfd284-486b-4f26-9daa-1ad87ee1eb52
+		summarizeBy: sum
+		sourceColumn: duration_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_passenger_count
+		dataType: double
+		formatString: 0
+		lineageTag: 8b722135-c952-4dd1-a36c-d0483e291d19
+		summarizeBy: sum
+		sourceColumn: total_passenger_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column passenger_count_records
+		dataType: int64
+		formatString: 0
+		lineageTag: b6d94615-cad6-4aba-a60b-e320093e540f
+		summarizeBy: sum
+		sourceColumn: passenger_count_records
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column tip_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 5a260034-d6c6-4d1d-a048-acfee9efd2a3
+		summarizeBy: sum
+		sourceColumn: tip_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column negative_fare_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: ac6ae277-dfa1-47a0-bda5-56c499fa0611
+		summarizeBy: sum
+		sourceColumn: negative_fare_trips
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column negative_total_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: d5275289-e51a-47c8-aaf0-dd41b070238b
+		summarizeBy: sum
+		sourceColumn: negative_total_trips
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column zero_distance_trips
+		dataType: int64
+		formatString: 0
+		lineageTag: 7c117b19-a83e-41d6-9fef-c0de872bee25
+		summarizeBy: sum
+		sourceColumn: zero_distance_trips
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_fare
+		dataType: double
+		formatString: 0.00
+		lineageTag: c77b6052-163d-403a-a6c9-7913afc18a50
+		summarizeBy: sum
+		sourceColumn: average_fare
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_distance
+		dataType: double
+		formatString: 0.00
+		lineageTag: 2eedfd54-9784-47fa-a3a9-0a62164e1a9d
+		summarizeBy: sum
+		sourceColumn: average_distance
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_duration_minutes
+		dataType: double
+		formatString: 0.00
+		lineageTag: ef2e1c91-e4e9-46e6-8232-0250a2a32b3d
+		summarizeBy: sum
+		sourceColumn: average_duration_minutes
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_passenger_count
+		dataType: double
+		formatString: 0.00
+		lineageTag: 38c7b445-8609-4080-8ef8-31f37d5a831f
+		summarizeBy: sum
+		sourceColumn: average_passenger_count
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_tip
+		dataType: double
+		formatString: 0.00
+		lineageTag: a94ace85-84d3-4543-be86-d8c9fabfce9d
+		summarizeBy: sum
+		sourceColumn: average_tip
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue_per_trip
+		dataType: double
+		formatString: 0.00
+		lineageTag: 33e1a79a-3743-4bc4-adde-d0b42612e9e2
+		summarizeBy: sum
+		sourceColumn: revenue_per_trip
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue_per_mile
+		dataType: double
+		formatString: 0.00
+		lineageTag: 63968f72-71dc-465e-bd8a-62141f3fde73
+		summarizeBy: sum
+		sourceColumn: revenue_per_mile
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Daily = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files("D:\Personal\MineProjects\PowerBIProjects\Project1\NYC-Taxi-Demand-Revenue-Analytics\data\powerbi"),
+				    #"D:\Personal\MineProjects\PowerBIProjects\Project1\NYC-Taxi-Demand-Revenue-Analytics\data\powerbi\_fact_daily parquet" = Source{[#"Folder Path"="D:\Personal\MineProjects\PowerBIProjects\Project1\NYC-Taxi-Demand-Revenue-Analytics\data\powerbi\",Name="fact_daily.parquet"]}[Content],
+				    #"Imported Parquet" = Parquet.Document(#"D:\Personal\MineProjects\PowerBIProjects\Project1\NYC-Taxi-Demand-Revenue-Analytics\data\powerbi\_fact_daily parquet")
+				in
+				    #"Imported Parquet"
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

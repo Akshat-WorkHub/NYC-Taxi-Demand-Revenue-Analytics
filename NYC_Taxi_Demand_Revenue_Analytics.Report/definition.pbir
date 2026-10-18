@@ -1,0 +1,8 @@
+{
+  "version": "4.0",
+  "datasetReference": {
+    "byPath": {
+      "path": "../NYC_Taxi_Demand_Revenue_Analytics.SemanticModel"
+    }
+  }
+}

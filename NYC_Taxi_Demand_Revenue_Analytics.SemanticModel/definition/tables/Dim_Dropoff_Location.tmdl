@@ -1,0 +1,49 @@
+table Dim_Dropoff_Location
+	lineageTag: 9520b239-b819-4d36-b1d4-bd0585d83079
+
+	column location_id
+		formatString: 0
+		lineageTag: d54e9ca7-a280-461f-839b-7716b26f6052
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [location_id]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Zone =
+			
+			LOOKUPVALUE(
+			    NYC_Taxi_Zones[Zone],
+			    NYC_Taxi_Zones[Location ID],
+			    Dim_Dropoff_Location[location_id]
+			)
+		lineageTag: b5a3f7c5-195f-4c99-8cb2-af021d0602bf
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Borough =
+			
+			LOOKUPVALUE(
+			    NYC_Taxi_Zones[Borough],
+			    NYC_Taxi_Zones[Location ID],
+			    Dim_Dropoff_Location[location_id]
+			)
+		lineageTag: 8d082ea2-13f9-4ee8-b243-da67c215183b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Dropoff_Location = calculated
+		mode: import
+		source =
+				
+				DISTINCT(
+				    SELECTCOLUMNS(
+				        Fact_Route,
+				        "location_id", Fact_Route[dropoff_location_id]
+				    )
+				)
+
+	annotation PBI_Id = 879c7fbaa66045c18c44f737cdeddfff
+

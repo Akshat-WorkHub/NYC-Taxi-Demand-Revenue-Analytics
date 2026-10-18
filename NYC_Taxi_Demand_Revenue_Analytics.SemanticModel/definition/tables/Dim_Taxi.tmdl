@@ -1,0 +1,42 @@
+table Dim_Taxi
+	lineageTag: ed47ead8-66c6-492b-84fe-02b721c9136e
+
+	column taxi_type
+		lineageTag: 4afedaa8-dd9d-44f1-ba9b-6a74063204aa
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [taxi_type]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Taxi = calculated
+		mode: import
+		source =
+				
+				DISTINCT(
+				    UNION(
+				        SELECTCOLUMNS(
+				            Fact_Daily,
+				            "taxi_type", Fact_Daily[taxi_type]
+				        ),
+				        SELECTCOLUMNS(
+				            Fact_Hourly,
+				            "taxi_type", Fact_Hourly[taxi_type]
+				        ),
+				        SELECTCOLUMNS(
+				            Fact_Location_Daily,
+				            "taxi_type", Fact_Location_Daily[taxi_type]
+				        ),
+				        SELECTCOLUMNS(
+				            Fact_Payment_Daily,
+				            "taxi_type", Fact_Payment_Daily[taxi_type]
+				        ),
+				        SELECTCOLUMNS(
+				            Fact_Route,
+				            "taxi_type", Fact_Route[taxi_type]
+				        )
+				    )
+				)
+
+	annotation PBI_Id = 0b759d7109de4571a8e1983e9616705d
+

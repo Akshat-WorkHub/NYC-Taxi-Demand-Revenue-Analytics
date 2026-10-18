@@ -1,0 +1,44 @@
+table NYC_Taxi_Zones
+	lineageTag: ee8c6850-e1a6-435f-976b-c76cf1705d70
+
+	column 'Location ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 44db1f30-2299-47e2-90e4-41cb66c91f4a
+		summarizeBy: count
+		sourceColumn: Location ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Zone
+		dataType: string
+		lineageTag: bf5991c8-82c8-47a3-8766-1264eefefc8f
+		summarizeBy: none
+		sourceColumn: Zone
+
+		annotation SummarizationSetBy = Automatic
+
+	column Borough
+		dataType: string
+		lineageTag: 5fabe1ab-2fcb-4943-a4db-56dbcdfb3efa
+		summarizeBy: none
+		sourceColumn: Borough
+
+		annotation SummarizationSetBy = Automatic
+
+	partition NYC_Taxi_Zones = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\Personal\MineProjects\PowerBIProjects\Project1\NYC-Taxi-Demand-Revenue-Analytics\NYC_Taxi_Zones.csv"),[Delimiter=",", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Shape Geometry", type text}, {"Shape Length", type number}, {"Shape Area", type number}, {"Zone", type text}, {"Location ID", Int64.Type}, {"Borough", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Shape Geometry", "Shape Length", "Shape Area"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Removed Columns",{"Location ID", "Zone", "Borough"})
+				in
+				    #"Reordered Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

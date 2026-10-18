@@ -1,2 +1,22 @@
 .venv
 data/
+
+# Original Power BI backup (keep PBIP/PBIR source under version control)
+/NYC_Taxi_Demand_Revenue_Analytics.pbix
+
+# Local environment and credential material
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Temporary, backup, and editor-generated files
+*.tmp
+*.temp
+*.log
+*.bak
+*.swp
+*~

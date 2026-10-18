@@ -1,0 +1,165 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 40.8562056044498,
+            "y": 69.0729125551937
+          },
+          "nodeIndex": "Fact_Daily",
+          "nodeLineageTag": "c83f8f07-0de6-4fcb-9fde-bcdd0607cbba",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 38.002539197672945,
+            "y": 385.54741807238884
+          },
+          "nodeIndex": "Fact_Hourly",
+          "nodeLineageTag": "2fabbaad-e2c0-4748-a5ec-98864264cf9e",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 970.11938704472846,
+            "y": 621.5720953054871
+          },
+          "nodeIndex": "Fact_Location_Daily",
+          "nodeLineageTag": "af5f2634-9d2b-4f06-83f8-387e66a65296",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 1704.7924002769848,
+            "y": 104.54278657002288
+          },
+          "nodeIndex": "Fact_Payment_Daily",
+          "nodeLineageTag": "3357e996-e5f0-429e-b65d-42c24147ed9e",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 37.336709489293895,
+            "y": 705.66380934765459
+          },
+          "nodeIndex": "Fact_Route",
+          "nodeLineageTag": "63ce16a0-a10c-41a7-9d98-e2c5999d7a53",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 673.61434006756167,
+            "y": 0
+          },
+          "nodeIndex": "Dim_Date",
+          "nodeLineageTag": "919240ce-05fc-4070-8657-70e1dd14968b",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 402.08373105897283,
+            "y": 0
+          },
+          "nodeIndex": "Dim_Taxi",
+          "nodeLineageTag": "ed47ead8-66c6-492b-84fe-02b721c9136e",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 962.42160343706314,
+            "y": 0
+          },
+          "nodeIndex": "Dim_Payment",
+          "nodeLineageTag": "a5ab11c2-5406-4451-87fb-b51ff8edb101",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 433.05262033951544,
+            "y": 585.55472228013207
+          },
+          "nodeIndex": "Dim_Pickup_Location",
+          "nodeLineageTag": "eeda9210-f915-4c31-a0cc-d101f48e79d5",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 595.04248479093155,
+            "y": 837.5775113328657
+          },
+          "nodeIndex": "Dim_Dropoff_Location",
+          "nodeLineageTag": "9520b239-b819-4d36-b1d4-bd0585d83079",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 1423.1412515141819,
+            "y": 558.532555083244
+          },
+          "nodeIndex": "NYC_Taxi_Zones",
+          "nodeLineageTag": "ee8c6850-e1a6-435f-976b-c76cf1705d70",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 53.5665843979499,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

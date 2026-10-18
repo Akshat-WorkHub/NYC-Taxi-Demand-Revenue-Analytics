@@ -1,0 +1,51 @@
+table Dim_Payment
+	lineageTag: a5ab11c2-5406-4451-87fb-b51ff8edb101
+
+	column payment_type
+		formatString: 0
+		lineageTag: 119b7be2-5e14-4260-b127-0007a47db3be
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [payment_type]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Payment Method' =
+			
+			SWITCH(
+			    Dim_Payment[payment_type],
+			    -1, "Missing / Not Reported",
+			    0, "Flex Fare",
+			    1, "Credit Card",
+			    2, "Cash",
+			    3, "No Charge",
+			    4, "Dispute",
+			    5, "Unknown",
+			    6, "Voided Trip",
+			    "Other"
+			)
+		lineageTag: 8e95d96b-bc4e-4e85-b402-9f030dd173eb
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Payment = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "payment_type", INTEGER,
+				    {
+				        {-1},
+				        {0},
+				        {1},
+				        {2},
+				        {3},
+				        {4},
+				        {5},
+				        {6}
+				    }
+				)
+
+	annotation PBI_Id = 45525ef7baea405bb7c480ae3f67c596
+

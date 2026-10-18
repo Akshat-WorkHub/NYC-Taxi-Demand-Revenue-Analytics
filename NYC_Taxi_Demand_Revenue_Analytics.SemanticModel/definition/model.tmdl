@@ -1,0 +1,29 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Fact_Daily","Fact_Hourly","Fact_Location_Daily","Fact_Payment_Daily","Fact_Route","NYC_Taxi_Zones"]
+
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
+
+ref table Fact_Daily
+ref table Fact_Hourly
+ref table Fact_Location_Daily
+ref table Fact_Payment_Daily
+ref table Fact_Route
+ref table Dim_Date
+ref table Dim_Taxi
+ref table Dim_Payment
+ref table Dim_Pickup_Location
+ref table Dim_Dropoff_Location
+ref table NYC_Taxi_Zones
+
+ref cultureInfo en-US
+
